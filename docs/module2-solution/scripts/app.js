@@ -6,8 +6,8 @@
   .controller('AlreadyBoughtController', AlreadyBoughtController)
   .provider('ShoppingListCheckOffService', ShoppingListCheckOffServiceprovider);
 
-  ToBuyController.$inject = ['ShoppingListCheckOffService'];
-  function ToBuyController(ShoppingListCheckOffService){
+  ToBuyController.$inject = ['$scope', 'ShoppingListCheckOffService'];
+  function ToBuyController($scope, ShoppingListCheckOffService){
     let ctrl = this;
     ctrl.items = ShoppingListCheckOffService.getItemsToBuy();
     ctrl.itemName = "";
@@ -18,8 +18,8 @@
 
   }
 
-  AlreadyBoughtController.$inject = ['ShoppingListCheckOffService'];
-  function AlreadyBoughtController(ShoppingListCheckOffService){
+  AlreadyBoughtController.$inject = ['$scope', 'ShoppingListCheckOffService'];
+  function AlreadyBoughtController($scope, ShoppingListCheckOffService){
     let ctrl = this;
     ctrl.items = ShoppingListCheckOffService.getItemsBought();
     //TODO
@@ -39,15 +39,15 @@
     service.addToBought(itemIndex){
       itemsBought.push(itemsToBuy[itemIndex]);
       itemsToBuy.splice(itemIndex);
-    }
+    };
 
     service.getItemsToBuy(){
       return itemsToBuy;
-    }
+    };
 
     service.getItemsBought(){
       return itemsBought;
-    }
+    };
 
   }
 
