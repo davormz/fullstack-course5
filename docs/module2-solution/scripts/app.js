@@ -1,10 +1,10 @@
-(function (){
+( function (){
   'use strict';
 
   angular.module('ShoppingListCheckOff', [])
   .controller('ToBuyController', ToBuyController)
   .controller('AlreadyBoughtController', AlreadyBoughtController)
-  .provider('ShoppingListCheckOffService', ShoppingListCheckOffServiceprovider);
+  .provider('ShoppingListCheckOffService', ShoppingListCheckOffServiceProvider);
 
   ToBuyController.$inject = ['$scope', 'ShoppingListCheckOffService'];
   function ToBuyController($scope, ShoppingListCheckOffService){
@@ -13,7 +13,11 @@
     ctrl.itemName = "";
 
     ctrl.addToBuyList = function(){
-      ShoppingListCheckOffService.addToBuy(itemName);
+      ShoppingListCheckOffService.addToBuy(ctrl.itemName);
+    };
+
+    ctrl.addToBought = function(itemIndex){
+      ShoppingListCheckOffService.addToBought(itemIndex);
     };
 
   }
@@ -31,21 +35,21 @@
     let itemsToBuy = [];
     let itemsBought = [];
 
-    service.addToBuy(itemName){
+    service.addToBuy =  function(itemName){
       let item = {name: itemName};
       itemsToBuy.push(item);
     };
 
-    service.addToBought(itemIndex){
+    service.addToBought = function(itemIndex){
       itemsBought.push(itemsToBuy[itemIndex]);
-      itemsToBuy.splice(itemIndex);
+      itemsToBuy.splice(itemIndex, 1);
     };
 
-    service.getItemsToBuy(){
+    service.getItemsToBuy = function(){
       return itemsToBuy;
     };
 
-    service.getItemsBought(){
+    service.getItemsBought = function(){
       return itemsBought;
     };
 
