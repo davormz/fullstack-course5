@@ -4,16 +4,20 @@
   angular.module('NarrowItDownApp', [])
   .controller('NarrowItDownController', NarrowItDownController)
   .service('MenuSearchService', MenuSearchService)
-  .directive('foundItems', foundItems)
+  .directive('foundItems', FoundItemsDirective)
   .constant('API_URL', 'https://davids-restaurant.herokuapp.com/menu_items.json');
 
-  function foundItems(){
+  function FoundItemsDirective(){
     var ddo = {
+      urlTemplate: 'found-items.template.html',
       scope:{
         items: '<',
+        title: '@title',
         onRemove: '&'
-      }
-
+      },
+      controller: FoundItemsDirectiveController,
+      controllerAs: list,
+      bindToController: true
     };
     return ddo;
   }
@@ -21,16 +25,20 @@
   NarrowItDownController.$inject = ['MenuSearchService'];
   function NarrowItDownController(MenuSearchService){
     //TODO:
+    let narrowDownCtrl = this;
 
-    let promise = MenuSearchService.getMatchedMenuItems();
+    narrowDownCtrl.getMatchedMenuItems = function(){
+      let promise = MenuSearchService.getMatchedMenuItems();
 
-    promise.then(function success(response){
-      console.log(response.data);
+      promise.then(function success(response){
+        console.log(response.data);
 
-      //TODO:
-    }, function error(errorResponse){
-      console.log(errorResponse.message);
-    });
+        //TODO:
+      }, function error(errorResponse){
+        console.log(errorResponse.message);
+      });
+    }
+    
   }
 
   MenuSearchService.$inject = ['$http', 'API_URL'];
