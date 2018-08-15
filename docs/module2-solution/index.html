@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" ng-app='ShoppingListCheckOff'>
   <head>
     <title>Shopping List Check Off</title>
@@ -32,26 +32,27 @@
 
     <!-- To Buy List -->
     <div class="col-md-6" ng-controller='ToBuyController as toBuyList'>
+      <input type="text" ng-model="toBuyList.itemQuantity" placeholder="quantity to buy">
       <input type="text" ng-model="toBuyList.itemName" placeholder="item to buy">
-      <button ng-click="toBuyList.addToBuyList();">Add Item</button>
+      <button ng-click="toBuyList.addToBuyList()">Add Item</button>
      <h2>To Buy:</h2>
      <ul>
        <li ng-repeat="item in toBuyList.items">
-         {{item.name}}
+         Buy {{item.quantity}} {{item.name}}
          <button ng-click="toBuyList.addToBought($index)" class="btn btn-default">
            <span class="glyphicon glyphicon-ok"></span> Bought</button>
        </li>
      </ul>
-     <div ng-show="toBuyList.items.length === 0" class="emptyMessage">Everything is bought!</div>
+     <div ng-if="toBuyList.items.length === 0" class="emptyMessage">Everything is bought!</div>
     </div>
 
     <!-- Already Bought List -->
     <div class="col-md-6" ng-controller='AlreadyBoughtController as doneList'>
      <h2>Already Bought:</h2>
      <ul>
-       <li ng-repeat="item in doneList.items">{{item.name}}</li>
+       <li ng-repeat="item in doneList.items">Bought {{item.quantity}} {{item.name}}</li>
      </ul>
-     <div ng-show="doneList.items.length === 0" class="emptyMessage">Nothing bought yet.</div>
+     <div ng-if="doneList.items.length === 0" class="emptyMessage">Nothing bought yet.</div>
     </div>
 
   </div>
