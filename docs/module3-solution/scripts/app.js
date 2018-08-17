@@ -1,11 +1,11 @@
-(function (){
+( function (){
   'use strict';
 
   angular.module('NarrowItDownApp', [])
   .controller('NarrowItDownController', NarrowItDownController)
   .service('MenuSearchService', MenuSearchService)
   .directive('foundItems', FoundItemsDirective)
-  .constant('API_URL', 'https://davids-restaurant.herokuapp.com/menu_items.json');
+  .constant('API_URL', 'https://davids-restaurant.herokuapp.com/');
 
   function FoundItemsDirective(){
     var ddo = {
@@ -16,29 +16,48 @@
         onRemove: '&'
       },
       controller: FoundItemsDirectiveController,
-      controllerAs: list,
+      controllerAs: 'list',
       bindToController: true
     };
     return ddo;
   }
 
+  function FoundItemsDirectiveController(){
+    //TODO
+  }
+
   NarrowItDownController.$inject = ['MenuSearchService'];
   function NarrowItDownController(MenuSearchService){
-    //TODO:
     let narrowDownCtrl = this;
 
+    narrowDownCtrl.searchTerm = "";
+    narrowDownCtrl.foundItems = [];
+
     narrowDownCtrl.getMatchedMenuItems = function(){
-      let promise = MenuSearchService.getMatchedMenuItems();
+      console.log("calling seervice ...");
+      let promise = MenuSearchService.getMatchedMenuItems(narrowDownCtrl.searchTerm);
 
       promise.then(function success(response){
-        console.log(response.data);
+        let menuItems = response.data.menu_items;
+        let itemsLength = menuItems.length;
 
-        //TODO:
-      }, function error(errorResponse){
-        console.log(errorResponse.message);
+        for(let i = 0 ; i < itemsLength ; i++ ){
+          if(menuItems[i].description.includes(narrowDownCtrl.searchTerm)){
+            narrowDownCtrl.foundItems.push(menuItems[i]);
+          }
+        }
+
+        console.log("Elements retrieved: " + narrowDownCtrl.foundItems.length);
+
+      }).catch(function (error) {
+        console.log("Something went wrong. " + error.message);
       });
+    };
+
+    narrowDownCtrl.removeItem = function(index){
+      narrowDownCtrl.foundItems.splice(index, 1);
     }
-    
+
   }
 
   MenuSearchService.$inject = ['$http', 'API_URL'];
@@ -46,7 +65,7 @@
     var service = this;
 
     service.getMatchedMenuItems = function(searchTerm){
-      var response = $http(method: "GET", url: API_URL );
+      var response = $http({method: "GET", url: (API_URL + 'menu_items.json') });
 
       return response;
     };
