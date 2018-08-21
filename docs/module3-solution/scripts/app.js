@@ -9,65 +9,83 @@
 
   function FoundItemsDirective(){
     var ddo = {
-      urlTemplate: 'found-items.template.html',
+      restrict: 'E',
+      templateUrl: 'found-items.template.html',
       scope:{
         items: '<',
-        title: '@title',
         onRemove: '&'
       },
-      controller: FoundItemsDirectiveController,
-      controllerAs: 'list',
-      bindToController: true
+      controllerAs: 'list'
     };
     return ddo;
   }
 
-  function FoundItemsDirectiveController(){
-    //TODO
-  }
 
   NarrowItDownController.$inject = ['MenuSearchService'];
   function NarrowItDownController(MenuSearchService){
     let narrowDownCtrl = this;
+    let menuSearchService = MenuSearchService;
+    let MESSAGE = "Nothing found!";
 
     narrowDownCtrl.searchTerm = "";
-    narrowDownCtrl.foundItems = [];
+    narrowDownCtrl.found = [];
+    narrowDownCtrl.message = "";
+    narrowDownCtrl.messageEnabled = false;
 
     narrowDownCtrl.getMatchedMenuItems = function(){
-      console.log("calling seervice ...");
-      let promise = MenuSearchService.getMatchedMenuItems(narrowDownCtrl.searchTerm);
+      narrowDownCtrl.found = [];
 
-      promise.then(function success(response){
-        let menuItems = response.data.menu_items;
-        let itemsLength = menuItems.length;
+      if(narrowDownCtrl.searchTerm.length === 0){
+        narrowDownCtrl.message = MESSAGE;
+        narrowDownCtrl.messageEnabled = true;
+      }else{
+        console.log("calling seervice ...");
+        let promise = menuSearchService.getMatchedMenuItems(narrowDownCtrl.searchTerm);
 
-        for(let i = 0 ; i < itemsLength ; i++ ){
-          if(menuItems[i].description.includes(narrowDownCtrl.searchTerm)){
-            narrowDownCtrl.foundItems.push(menuItems[i]);
+        promise.then(function success(response){
+          if(response.length === 0){
+            narrowDownCtrl.message = MESSAGE;
+            narrowDownCtrl.messageEnabled = true;
+          }else{
+            narrowDownCtrl.found = response;
+            narrowDownCtrl.messageEnabled = false;
           }
-        }
-
-        console.log("Elements retrieved: " + narrowDownCtrl.foundItems.length);
-
-      }).catch(function (error) {
-        console.log("Something went wrong. " + error.message);
-      });
+          console.log("Elements found: " + narrowDownCtrl.found.length);
+        }).catch(function (error) {
+          console.log("Something went wrong. " + error.message);
+        });
+      }
     };
 
     narrowDownCtrl.removeItem = function(index){
-      narrowDownCtrl.foundItems.splice(index, 1);
-    }
+      narrowDownCtrl.found.splice(index, 1);
+    };
 
   }
 
   MenuSearchService.$inject = ['$http', 'API_URL'];
   function MenuSearchService($http, API_URL){
-    var service = this;
+    let service = this;
+    let items = [];
 
     service.getMatchedMenuItems = function(searchTerm){
-      var response = $http({method: "GET", url: (API_URL + 'menu_items.json') });
+      return $http({method: "GET", url: (API_URL + 'menu_items.json') })
+      .then(function success(response){
+        let menuItems = response.data.menu_items;
+        let itemsLength = menuItems.length;
 
-      return response;
+        for(let i = 0 ; i < itemsLength ; i++ ){
+          if(menuItems[i].description.includes(searchTerm)){
+            items.push(menuItems[i]);
+          }
+        }
+        console.log("Elements retrieved: " + items.length);
+
+        return items;
+
+      }).catch(function (error) {
+        console.log("Something went wrong. " + error.message);
+      });
     };
 
   }

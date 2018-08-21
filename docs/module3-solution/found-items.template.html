@@ -1,8 +1,10 @@
-<h3>Title: {{ list.title }}</h3>
-<ol>
-  <li ng-repeat="item in list.items">
-    {{ item.name }}, Short name {{item.short_name}}<br>
-    Description: {{item.description}}
-    <button ng-click="list.onRemove({index: $index});">Remove Item</button>
-  </li>
-</ol>
+<div class="list-group">
+  <ol>
+    <li class="list-group-item" ng-repeat="item in items">
+      {{item.short_name}} - {{ item.name }}
+      <br> Description: {{item.description}}
+      <br><button class="btn" ng-click="onRemove({index: $index});">Remove Item</button>
+
+    </li>
+  </ol>
+</div>

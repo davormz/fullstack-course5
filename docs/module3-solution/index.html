@@ -9,18 +9,23 @@
   <script src="scripts/angular.min.js"></script>
   <script src="scripts/app.js"></script>
 <body>
-   <div class="container" ng-controller="NarrowItDownController as list">
+   <div class="container" ng-controller="NarrowItDownController as narrowDownCtrl">
     <h1>Narrow Down Your Chinese Menu Choice</h1>
-
-    <div class="form-group">
-      <input type="text" placeholder="search term" class="form-control" ng-model="list.searchTerm">
+    <div class="row">
+      <div class="form-group">
+        <input type="text" placeholder="search term" class="form-control" ng-model="narrowDownCtrl.searchTerm">
+        <button ng-click="narrowDownCtrl.getMatchedMenuItems()" class="btn btn-primary">Narrow It Down For Me!</button>
+      </div>    
     </div>
-    <div class="form-group narrow-button">
-      <button ng-click="list.getMatchedMenuItems()" class="btn btn-primary">Narrow It Down For Me!</button>
+
+    <div class="row">
+      <div class="alert alert-warning" ng-if="narrowDownCtrl.messageEnabled">{{narrowDownCtrl.message}}</div>
     </div>
 
-    <found-items title="Found Items" items="list.foundItems" on-remove="list.removeItem(index)">
-    </found-items>
+    <div class="row">
+      <found-items items="narrowDownCtrl.found" on-remove="narrowDownCtrl.removeItem(index)">
+      </found-items>
+    </div>
 
   </div>
 
