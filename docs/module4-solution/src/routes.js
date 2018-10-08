@@ -19,10 +19,9 @@ function RoutesConfig($stateProvider, $urlRouterProvider) {
     templateUrl: 'src/menu_app/components/home/home.state.html'
   })
 
-  // Premade list page
   .state('categories', {
     url: '/categories',
-    templateUrl: 'src/menu_app/component/categories.state.html',
+    templateUrl: 'src/menu_app/components/categories/categories.state.html',
     controller: 'CategoriesController as categoriesList',
     resolve: {
       items: ['MenuDataService', function (MenuDataService) {
@@ -34,7 +33,7 @@ function RoutesConfig($stateProvider, $urlRouterProvider) {
   // Item detail
   .state('items', {
     url: '/item-detail/{shortName}',
-    templateUrl: 'src/menu_app/component/item-detail.state.html',
+    templateUrl: 'src/menu_app/components/item-detail/item-detail.state.html',
     controller: 'ItemDetailController as categoryItemsDetail',
     resolve: {
       categoryItems: ['$stateParams', 'MenuDataService',
