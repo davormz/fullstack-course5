@@ -30,8 +30,24 @@ function MenuDataService($http, ApiBasePath){
       }
     })
     .then(function success(response){
-      categoryItems = response.data.menu_items;
+      categoryItems = response.data;
       return categoryItems;
+    }).catch(function (error) {
+      console.log("Something went wrong. " + error.message);
+    });
+  };
+
+  service.getCategoryDetail = function(shortName){
+    return $http({
+      method: "GET",
+      url: (ApiBasePath + "menu_items.json"),
+      params: {
+        category: shortName
+      }
+    })
+    .then(function success(response){
+      category = response.data.category;
+      return category;
     }).catch(function (error) {
       console.log("Something went wrong. " + error.message);
     });
